@@ -1,0 +1,29 @@
+# Arquivos e pastas do VSCode
+.vscode/
+*.code-workspace
+
+# Ambiente virtual Python
+venv/
+env/
+.env
+.venv
+
+# Arquivos Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de configuração local
+*.local
+
+# Arquivos de dependências
+node_modules/
+ 
