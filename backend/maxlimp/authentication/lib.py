@@ -1,15 +1,62 @@
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.core.mail import send_mail
+
 
 from rest_framework.response import Response
 
 from datetime import datetime, timedelta
 
+from random import randint
+
 import jwt
 import re
 
 from .const import *
+
+from .models import *
+
+def validate_redefine_password_fields(password, new_password):
+    errors = {}
+
+    if not new_password:
+        errors['error'] = 'Nova senha é obrigatória.'
+        errors['type'] = 'newPasswordNeeded'
+    elif len(new_password) < MIN_PASSWORD_LENGTH:
+        errors['error'] = 'A nova senha deve ter pelo menos 8 caracteres.'
+        errors['type'] = 'newPasswordInvalid'
+
+    if new_password == password:
+        errors['error'] = 'A nova senha não pode ser igual a senha antiga.'
+        errors['type'] = 'newPasswordEqualPassword'
+
+    return errors
+
+def validate_login_fields(email, password):
+    errors = {}
+
+    
+    if not email:
+        errors['error'] = 'Email é obrigatório.'
+        errors['type'] = 'emailNeeded'
+    else:
+        try:
+            validate_email(email)
+        except ValidationError:
+            errors['error'] = 'Email inválido.'
+            errors['type'] = 'emailInvalid'
+   
+    if not password:
+        errors['error'] = 'Senha é obrigatória.'
+        errors['type'] = 'passwordNeeded'
+    elif len(password) < MIN_PASSWORD_LENGTH:
+        errors['error'] = 'A senha deve ter pelo menos 8 caracteres.'
+        errors['type'] = 'passwordInvalid'
+
+
+    return errors
+
 
 def validate_register_fields(email, password, phone, name):
     errors = {}
@@ -48,8 +95,71 @@ def validate_register_fields(email, password, phone, name):
 
     return errors
 
+def set_cookie(response, key, value):
+    response.set_cookie(
+        key=key,
+        value=value,
+        httponly=True,  
+        samesite='None',
+        secure=True,
+        max_age=MAX_AGE_JWT,
+        path='/',
+    )
 
-def create_jwt(user):
+    return response
+
+
+def create_jwt_response(message, status, payload, key="auth"):
+    response = Response({"message": message, "payload": payload}, status=status)
+
+    response.set_cookie(
+        key=key,
+        value=payload,
+        httponly=True,  
+        samesite='None',
+        secure=True,
+        max_age=MAX_AGE_JWT,
+        path='/',
+    )
+
+    return response
+
+
+def decode_jwt(token):
+    return jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+
+
+def create_jwt_temp(name, email, password, phone, code):
+    #Criando payload
+    payload = {
+        'name': name,
+        'email': email,
+        'password': password,
+        'phone': phone,
+        'correct_code': code,
+        'expiration_date': (datetime.now() + timedelta(minutes=20)).timestamp(),  
+        'exp': datetime.now() + timedelta(days=120),
+        'iat': datetime.now(),
+    }
+
+    #Gerando token
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
+    return token
+
+def invalid_cookie():
+    #Criando payload
+    j = {
+        'invalid': True,
+        'exp': datetime.now() + timedelta(days=120),
+        'iat': datetime.now(),
+    }
+
+    payload = jwt.encode(j, settings.SECRET_KEY, algorithm=ALGORITHM)
+
+    
+    return payload
+
+def create_jwt_to_auth(user):
     #Criando payload
     payload = {
         'user_id': user.id,
@@ -63,17 +173,49 @@ def create_jwt(user):
     return token
 
 
-def create_response_with_token(message, status, token):
-    response = Response({"message": message}, status=status)
-    # Coloca o cookie com data de expiração de 120 dias
-    response.set_cookie(
-        key='jwt', 
-        value=token, 
-        httponly=True,
-        secure=True,
-        samesite='Strict',
-        max_age=MAX_AGE_JWT
+def send_random_code(email):
+    # Gerar código aleatório de 6 dígitos
+    code = str(randint(100000, 999999))
+
+    subject = "Seu código de verificação"
+    body = f"Seu código de verificação é: {code}"
+
+    # Enviar email usando Django
+    try:
+        send_mail(
+            subject,
+            body,
+            settings.EMAIL_HOST_USER,
+            [email],
+            auth_password=settings.EMAIL_HOST_PASSWORD,
+            fail_silently=False,
         )
+    except Exception as e:
+        print("ERROR", e)
+        return False
+
+    return code
+
+
+def resset_password_email(email):
+    token = jwt.encode({'email': email, 'exp': datetime.now() + timedelta(minutes=30)}, settings.SECRET_KEY, algorithm=ALGORITHM)
+
+    UserToken.objects.create(user=email, token=token)
+
+    subject = "Redefinição de senha"
+    body = f"Para redefinir sua senha, clique no link a seguir: <a href='http://localhost:3000/reset-password/{token}'>Clique aqui!</a>"
+    try:
+        send_mail(
+            subject,
+            body,
+            settings.EMAIL_HOST_USER,
+            [email],
+            auth_password=settings.EMAIL_HOST_PASSWORD,
+            fail_silently=False,
+        )
+    except Exception as e:
+        print("ERROR", e)
+        return False
     
-    return response
+    return token
 
