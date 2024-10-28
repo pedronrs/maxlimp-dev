@@ -82,7 +82,7 @@ def validate_register_fields(email, password, phone, name):
     if phone == None:
         errors['error'] = 'Número de telefone é obrigatório.'
         errors['type'] = 'phoneNeeded'
-    elif not re.match(r'^\d{10,15}$', phone):
+    elif not re.match(r'^\d{8,10}$', phone):
         errors['error'] = 'Número de telefone inválido.'
         errors['type'] = 'phoneInvalid'
 
@@ -203,7 +203,7 @@ def resset_password_email(email):
     UserToken.objects.create(user=email, token=token)
 
     subject = "Redefinição de senha"
-    body = f"Para redefinir sua senha, clique no link a seguir: <a href='http://localhost:3000/reset-password/{token}'>Clique aqui!</a>"
+    body = f"Para redefinir sua senha, clique no link a seguir: <a href='http://localhost:5173/reset-password/{token}'>Clique aqui!</a>"
     try:
         send_mail(
             subject,

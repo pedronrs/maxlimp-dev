@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from django.contrib.auth import login
+from django.contrib.auth.hashers import check_password
 
 from .lib import *
 from .orm import *
@@ -100,14 +100,18 @@ class RegisterAPI(APIView):
       
         if auth is not None:
             if decode_jwt(auth).get("invalid") is None: 
+                print("DANDO ERRO1")
                 return Response({"error": "O usuário já está autenticado.", "type": "alreadyAuthenticated"},
                                 status=status.HTTP_400_BAD_REQUEST)
         
         temp_auth = request.COOKIES.get("temp_auth")
 
+        print(decode_jwt(temp_auth))
+
  
         if temp_auth is not None:
             if decode_jwt(temp_auth).get("invalid") is None: 
+                print("DANDO ERRO2")
                 return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
                                 status=status.HTTP_400_BAD_REQUEST)
             
@@ -218,12 +222,17 @@ class RedefinePasswordAPI(APIView):
                                 status=status.HTTP_400_BAD_REQUEST)
 
 
-        user = get_user(decode_jwt(auth))
+        user = get_user(decode_jwt(auth)["email"])
         email = user.email
         password = request.data.get("password")
         new_password = request.data.get("newPassword")
 
         validation_errors = validate_redefine_password_fields(password, new_password)
+
+        print(check_password(password, user.password))
+
+        if check_password(password, user.password) is False:
+            return Response({"error": "A senha atual está errada."}, status=status.HTTP_400_BAD_REQUEST)
 
         if validation_errors:
             return Response(validation_errors, status=status.HTTP_400_BAD_REQUEST)
@@ -238,38 +247,6 @@ class RedefinePasswordAPI(APIView):
 
         return Response({"message": "Senha redefinida com sucesso."}, status=status.HTTP_200_OK)
         
-
-class ForgotPasswordAPI(APIView):
-    def post(self, request):
-        auth = request.COOKIES.get("auth")
-
-        if auth is not None:
-            if decode_jwt(auth).get("invalid"): 
-                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
-                                status=status.HTTP_400_BAD_REQUEST)
-            
-        else:
-            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
-                            status=status.HTTP_400_BAD_REQUEST)
-        
-        temp_auth = request.COOKIES.get("temp_auth")
-
-        if temp_auth is not None:
-            if decode_jwt(temp_auth).get("invalid") is None: 
-                return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
-                                status=status.HTTP_400_BAD_REQUEST)
-            
-
-        user = get_user(decode_jwt(auth))
-        email = user.email
-
-        token = resset_password_email(email)
-
-        if not token:
-            return Response({"error": "Erro ao enviar email.", "type": "emailError"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-        return Response({"message": "Email enviado com sucesso."}, status=status.HTTP_200_OK)
-
        
 
 class DeleteAccountAPI(APIView):
@@ -294,7 +271,7 @@ class DeleteAccountAPI(APIView):
                
             
 
-        user = get_user(decode_jwt(auth))
+        user = get_user(decode_jwt(auth)["email"])
 
         email = user.email
 
@@ -312,25 +289,39 @@ class DeleteAccountAPI(APIView):
 
 class CheckAuthAPI(APIView):
     def get(self, request):
-        auth = request.COOKIES.get("auth")
 
-        if auth is not None:
-            if decode_jwt(auth).get("invalid"): 
-                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
-                                status=status.HTTP_400_BAD_REQUEST)
-            
-        else:
-            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
-                            status=status.HTTP_400_BAD_REQUEST)
-        
         temp_auth = request.COOKIES.get("temp_auth")
+
 
         if temp_auth is not None:
             if decode_jwt(temp_auth).get("invalid") is None: 
                 return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_200_OK)
+            
+        auth = request.COOKIES.get("auth")
+
+        print(decode_jwt(auth))
+
+
+        if auth is not None:
+            if decode_jwt(auth).get("invalid"): 
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
+                                status=status.HTTP_200_OK)
+            
+        
+        
               
 
-        user = get_user(decode_jwt(auth))
+        user = get_user(decode_jwt(auth)["email"])
 
-        return Response({"message": "Usuário autenticado com sucesso.", "user": user}, status=status.HTTP_200_OK)
+        if user is None:
+            return Response({"error": "O usuário não existe.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+
+        user_obj = {
+            "name":user.name,
+            "email": user.email,
+            "avatar": user.avatar,
+            "phone": user.phone,
+        }
+
+        return Response({"message": "Usuário autenticado com sucesso.", "user": user_obj, "type": "authenticated"}, status=status.HTTP_200_OK)
