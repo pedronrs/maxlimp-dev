@@ -37,7 +37,7 @@ function Register() {
   };
 
   return (
-    <AuthLayout name="registro">
+    <AuthLayout onSend={handleRegister} name="registro">
       {error && <p className="text-sm text-red-500">{error}</p>}
       <BaseInput
         name="nome"
@@ -68,11 +68,7 @@ function Register() {
       />
 
       <div>
-        <AuthButton
-          disabled={isMutating}
-          onClick={handleRegister}
-          name="criar"
-        />
+        <AuthButton disabled={isMutating} name="criar" />
         <Link to="/entrar" className="block text-gray-400 text-sm">
           Já tem uma conta?
         </Link>

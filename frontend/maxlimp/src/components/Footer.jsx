@@ -27,7 +27,14 @@ function Footer() {
         <img src={logo} className="h-24" alt="Logo da Maxlimp" />
         Maxlimp
       </div>
-      <div className="flex items-center justify-start gap-8 flex-col">
+
+      <div className="flex justify-self-center items-start gap-8 flex-col justify-center text-md">
+        <div className="font-bold text-lg">Contatos:</div>
+        <div>Email</div>
+        <div>Telefone</div>
+        <div>Whatsapp</div>
+      </div>
+      <div className="flex items-end justify-center justify-self-end gap-8 flex-col">
         <div className="flex self-center justify-center items-center gap-4 text-md">
           <FaWhatsapp className="h-10 w-10 fill-indigo-600 mr-3" />
           Fale conosco
@@ -38,11 +45,6 @@ function Footer() {
           Compre com até <br />
           90 dias a pagar.
         </div>
-      </div>
-      <div className="flex justify-self-end items-start gap-8 flex-col justify-center text-md">
-        <div>Email</div>
-        <div>Telefone</div>
-        <div>Whatsapp</div>
       </div>
     </footer>
   );

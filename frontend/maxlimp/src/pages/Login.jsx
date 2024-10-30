@@ -33,7 +33,7 @@ function Login() {
   };
 
   return (
-    <AuthLayout name="login">
+    <AuthLayout onSend={handleLogin} name="login">
       {error && <p className="text-sm text-red-500">{error}</p>}
       <BaseInput
         value={email}
@@ -49,7 +49,7 @@ function Login() {
         type="password"
       />
       <div>
-        <AuthButton onClick={handleLogin} disabled={isMutating} name="entrar" />
+        <AuthButton disabled={isMutating} name="entrar" />
         <Link to="/registro" className="block text-gray-400 text-sm">
           Não tem uma conta?
         </Link>

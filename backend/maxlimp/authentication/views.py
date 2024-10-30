@@ -106,7 +106,6 @@ class RegisterAPI(APIView):
         
         temp_auth = request.COOKIES.get("temp_auth")
 
-        print(decode_jwt(temp_auth))
 
  
         if temp_auth is not None:

@@ -1,12 +1,18 @@
+import { useProducts } from "../contexts/ProductsProvider";
 import SubHeaderPage from "./SubHeaderPage";
 import { useLocation } from "react-router-dom";
 
 function SubHeaderHome({ user }) {
   const { pathname: location, hash } = useLocation();
 
+  const { cleanSearch } = useProducts();
+
   return (
     <div className="flex justify-start items-center gap-10 py-4 pb-8">
       <SubHeaderPage
+        onClick={() => {
+          cleanSearch();
+        }}
         active={location === "/" && hash.slice(1) !== "contatos"}
         to="/"
       >
@@ -21,11 +27,14 @@ function SubHeaderHome({ user }) {
             Pedidos
           </SubHeaderPage>
           <SubHeaderPage active={location === "suporte/"} to="/suporte">
-            Suport
+            Suporte
           </SubHeaderPage>
         </>
       )}
       <SubHeaderPage
+        onClick={() => {
+          cleanSearch();
+        }}
         active={location === "/" && hash.slice(1) === "contatos"}
         to="#contatos"
       >

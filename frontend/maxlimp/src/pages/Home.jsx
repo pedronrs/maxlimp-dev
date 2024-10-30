@@ -10,9 +10,6 @@ function Home() {
       <HeroSection />
 
       <div className="mt-24 mb-40 px-12">
-        <h2 className="text-2xl text-indigo-600 font-semibold uppercase  tracking-tight mb-6">
-          em destaque
-        </h2>
         <ProductsContainer />
       </div>
       <Footer />

@@ -12,3 +12,19 @@ class GetProducts(APIView):
         products = get_products()
         
         return Response(products, status=HTTP_200_OK)
+    
+
+
+
+class FuzzyProducts(APIView):
+    def get(self, request):
+
+        query = request.query_params.get("query")
+
+        print(query)
+        if not query:
+            return Response([], status=HTTP_200_OK)
+
+        products = fuzzy_search_products(query)
+
+        return Response(products, status=HTTP_200_OK)

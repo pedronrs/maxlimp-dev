@@ -28,7 +28,7 @@ function ConfirmEmailCode() {
   };
 
   return (
-    <AuthLayout name="Validação">
+    <AuthLayout onSend={handleValidate} name="Validação">
       {error && <p className="text-sm text-red-500">{error}</p>}
       <BaseInput
         name="codigo"
@@ -38,11 +38,7 @@ function ConfirmEmailCode() {
       />
 
       <div>
-        <AuthButton
-          onClick={handleValidate}
-          disabled={isMutating}
-          name="confirmar"
-        />
+        <AuthButton disabled={isMutating} name="confirmar" />
         <AuthRessendCode setError={setError}>
           Reenviar o código!
         </AuthRessendCode>

@@ -1,6 +1,6 @@
 import Loading from "../components/Loading";
 
-function AuthButton({ name, onClick, disabled }) {
+function AuthButton({ name, disabled }) {
   return (
     <button
       disabled={disabled}
@@ -8,7 +8,6 @@ function AuthButton({ name, onClick, disabled }) {
         border-2  border-indigo-600 uppercase tracking-wider ${
           disabled ? "bg-transparent" : "hover:bg-indigo-700 bg-indigo-600 "
         }`}
-      onClick={onClick}
     >
       {disabled ? <Loading classNames="h-4" /> : name}
     </button>

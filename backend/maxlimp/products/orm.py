@@ -1,4 +1,5 @@
 from .models import Product
+from fuzzywuzzy import process
 
 
 def get_products():
@@ -11,13 +12,30 @@ def get_products():
         products_list.append({
             "name": product.name,
             "price": product.price,
-            "description": product.description,
             "image": product.image,
             "category": product.category,
         })
 
 
     return products_list
+
+
+def fuzzy_search_products(query, threshold=50):
+    products = get_products()
+
+    
+    product_names = [product["name"] for product in products]
+
+    matches = process.extract(query, product_names, limit=len(product_names))
+
+
+    matched_products = [
+        product for product in products
+        for name, score in matches if name == product["name"] and score >= threshold
+    ]
+
+    return matched_products
+
 
 
 
