@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ConfirmEmailCode from "./pages/ConfirmEmailCode";
 import Profile from "./pages/Profile";
+import AboutUs from "./pages/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "validacao/",
     element: <ConfirmEmailCode />,
+  },
+  {
+    path: "sobre-nos/",
+    element: <AboutUs />,
   },
 ]);
 

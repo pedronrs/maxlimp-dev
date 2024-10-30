@@ -291,27 +291,24 @@ class CheckAuthAPI(APIView):
     def get(self, request):
 
         temp_auth = request.COOKIES.get("temp_auth")
+        auth = request.COOKIES.get("auth")
 
+        print(auth, temp_auth)
 
+       
         if temp_auth is not None:
             if decode_jwt(temp_auth).get("invalid") is None: 
                 return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
                                 status=status.HTTP_200_OK)
-            
-        auth = request.COOKIES.get("auth")
-
-        print(decode_jwt(auth))
-
 
         if auth is not None:
             if decode_jwt(auth).get("invalid"): 
-                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
-                                status=status.HTTP_200_OK)
-            
-        
-        
-              
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
 
+          
+           
         user = get_user(decode_jwt(auth)["email"])
 
         if user is None:
