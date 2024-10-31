@@ -21,10 +21,39 @@ class FuzzyProducts(APIView):
 
         query = request.query_params.get("query")
 
-        print(query)
+        filters = request.query_params.get("filters")
+
+        categories = filters["categories"]
+        price = filters["price"]
+
         if not query:
             return Response([], status=HTTP_200_OK)
 
-        products = fuzzy_search_products(query)
+        products = fuzzy_search_products(query, 50, categories, price["min"], price["max"])
 
         return Response(products, status=HTTP_200_OK)
+
+
+class FilterProducts(APIView):
+    def get(self, request):
+        
+        filters = request.query_params.get("filters")
+
+        categories = filters["categories"]
+        price = filters["price"]
+
+        products = filter_products(categories, min, max)
+
+        return Response(products, status=HTTP_200_OK)
+
+
+class FilterLengthResults(APIView):
+    filters = request.query_params.get("filters")
+
+    categories = filters["categories"]
+    price = filters["price"]
+
+    products = filter_products(categories, min, max)
+
+
+    return Response({"length": len(products)}, status=HTTP_200_OK)

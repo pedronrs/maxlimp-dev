@@ -1,6 +1,8 @@
 from .models import Product
 from fuzzywuzzy import process
 
+from django.db.models import Q
+
 
 def get_products():
     products = Product.objects.all()
@@ -20,9 +22,22 @@ def get_products():
     return products_list
 
 
-def fuzzy_search_products(query, threshold=50):
+def filter_products(categories, min, max):
     products = get_products()
 
+    if len(categories):
+        products = [product for product in products if product["category"] in categories]
+
+    if min and max:
+        products = [product for product in products if product["price"] < max and product["price"] > min]
+
+    return products
+
+
+
+
+def fuzzy_search_products(query, threshold=50, categories, min, max):
+    products = filter_products(categories, min, max)
     
     product_names = [product["name"] for product in products]
 
@@ -35,6 +50,8 @@ def fuzzy_search_products(query, threshold=50):
     ]
 
     return matched_products
+
+
 
 
 
