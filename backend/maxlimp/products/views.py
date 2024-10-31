@@ -48,12 +48,23 @@ class FilterProducts(APIView):
 
 
 class FilterLengthResults(APIView):
-    filters = request.query_params.get("filters")
+    def get(self, request):
+        filters = request.query_params.get("filters")
 
-    categories = filters["categories"]
-    price = filters["price"]
+        categories = filters["categories"]
+        price = filters["price"]
 
-    products = filter_products(categories, min, max)
+        products = filter_products(categories, price["min"], price["max"])
 
 
-    return Response({"length": len(products)}, status=HTTP_200_OK)
+        return Response({"length": len(products)}, status=HTTP_200_OK)
+
+
+
+class EspecificProduct(APIView):
+    def get(self, request):
+        product_name = request.query_params.get("product")
+
+        product = get_especific_product(product_name)
+
+        return Response(product, status=HTTP_200_OK)

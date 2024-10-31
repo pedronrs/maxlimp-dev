@@ -1,7 +1,7 @@
-from .models import Product
+from .models import Product, Rating
 from fuzzywuzzy import process
 
-from django.db.models import Q
+
 
 
 def get_products():
@@ -51,6 +51,44 @@ def fuzzy_search_products(query, threshold=50, categories, min, max):
 
     return matched_products
 
+
+def get_especific_product(product_name):
+    product = Product.objects.filter(name=product_name).first()
+
+    if not product:
+        return {}
+    
+    ratings = Rating.objects.filter(product_id=product.pk)
+
+    ratings_arr = [
+        {
+            "user": {
+                "name": rating.user_id.name,
+                "avatar": rating.user_id.avatar
+            },
+            "rating": {
+                "stars": rating.stars,
+                "updateAt": rating.updated_at,
+                "title": rating.title,
+                "comment": rating.comment
+            }
+        } for rating in ratings
+    ]
+
+    
+
+    product_obj = {
+        "name": product.name,
+        "description": product.description,
+        "image": product.image,
+        "price": product.price,
+        "ratings": ratings_arr
+    }
+
+
+    return product_obj
+
+    
 
 
 

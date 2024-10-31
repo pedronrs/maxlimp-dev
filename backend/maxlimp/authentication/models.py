@@ -12,7 +12,6 @@ class User(AbstractUser):
     avatar = models.CharField(max_length=200, default='default')
     type = models.CharField(max_length=100, default='client')
 
-    # Override the username, first_name, last_name and date_joined fields to use email instead
     date_joined = None
     first_name = None
     last_name = None
