@@ -29,7 +29,7 @@ class FuzzyProducts(APIView):
         if not query:
             return Response([], status=HTTP_200_OK)
 
-        products = fuzzy_search_products(query, 50, categories, price["min"], price["max"])
+        products = fuzzy_search_products(query, categories, price["min"], price["max"])
 
         return Response(products, status=HTTP_200_OK)
 

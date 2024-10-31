@@ -36,7 +36,7 @@ def filter_products(categories, min, max):
 
 
 
-def fuzzy_search_products(query, threshold=50, categories, min, max):
+def fuzzy_search_products(query, categories, min, max, threshold=50):
     products = filter_products(categories, min, max)
     
     product_names = [product["name"] for product in products]
@@ -74,8 +74,6 @@ def get_especific_product(product_name):
             }
         } for rating in ratings
     ]
-
-    
 
     product_obj = {
         "name": product.name,
