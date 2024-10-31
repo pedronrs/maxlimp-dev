@@ -68,3 +68,8 @@ class EspecificProduct(APIView):
         product = get_especific_product(product_name)
 
         return Response(product, status=HTTP_200_OK)
+    
+
+class RateProduct(APIView):
+    def post(self, request):
+        pass
