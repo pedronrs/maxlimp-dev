@@ -2,6 +2,7 @@ import React from 'react';
 import { useProduct } from '../contexts/ProductContext';
 import { Box, Grid, Typography, Paper } from '@mui/material';
 import AddToCart from '../components/AddToCart';
+import { Link } from 'react-router-dom';
 
 function ProductDetails() {
   const { product } = useProduct();
@@ -42,7 +43,7 @@ function ProductDetails() {
             <Typography variant="h6" color="text.secondary">
               R$ {product.price}
             </Typography>
-            <AddToCart product={product}/>
+            <Link to='/cart'><AddToCart product={product}/></Link> 
           </Grid>
         </Grid>
       </Paper>
