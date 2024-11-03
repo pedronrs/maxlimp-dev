@@ -82,7 +82,7 @@ def validate_register_fields(email, password, phone, name):
     if phone == None:
         errors['error'] = 'Número de telefone é obrigatório.'
         errors['type'] = 'phoneNeeded'
-    elif not re.match(r'^\d{8,10}$', phone):
+    elif not re.match(r'^\d{9,16}$', phone):
         errors['error'] = 'Número de telefone inválido.'
         errors['type'] = 'phoneInvalid'
 

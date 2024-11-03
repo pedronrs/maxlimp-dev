@@ -5,7 +5,7 @@ import HeaderHome from "../components/HeaderHome";
 function AboutUs() {
   return (
     <div>
-      <HeaderHome />
+      <HeaderHome showSearch={false} />
       <AboutUsSection />
       <Footer />
     </div>

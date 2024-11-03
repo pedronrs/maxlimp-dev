@@ -11,7 +11,7 @@ import { useAuth } from "../contexts/AuthProvider";
 import { useEffect } from "react";
 import SubHeaderHome from "./SubHeaderHome";
 
-function HeaderHome() {
+function HeaderHome({ showSearch = true }) {
   const { data } = useSWR("auth/check-auth/", getFetcher);
 
   const { setUser } = useAuth();
@@ -30,10 +30,15 @@ function HeaderHome() {
     <header className=" px-12 bg-indigo-50 flex flex-col items-start justify-center">
       <div className="flex py-6 w-full justify-between items-center  gap-12">
         <img src={logo} alt="Maxlimp logo" className="h-12 w-12" />
-        <SearchInput />
+        {showSearch && <SearchInput />}
+
         {user ? (
           <>
-            <div className="flex items-center justify-center gap-12">
+            <div
+              className={`flex items-center justify-center gap-12 ${
+                showSearch ? "" : "ml-auto"
+              }`}
+            >
               <CiHeart className="w-8 h-8 fill-indigo-600" />
               <CiShoppingCart className="w-8 h-8 fill-indigo-600" />
             </div>

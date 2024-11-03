@@ -3,8 +3,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ConfirmEmailCode from "./pages/ConfirmEmailCode";
-import Profile from "./pages/Profile";
+
 import AboutUs from "./pages/AboutUs";
+import Config from "./pages/Config";
 
 const router = createBrowserRouter([
   {
@@ -12,8 +13,12 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "perfil/",
-    element: <Profile />,
+    path: "configuracoes/",
+    element: <Config />,
+  },
+  {
+    path: "configuracoes/:config",
+    element: <Config />,
   },
   {
     path: "entrar/",

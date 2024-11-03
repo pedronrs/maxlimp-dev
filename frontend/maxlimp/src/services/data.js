@@ -10,7 +10,6 @@ const postFetcher = async function (url, { arg }) {
         phone: arg?.phone.replace(/\D/g, "").replaceAll(" ", ""),
       };
 
-  console.log(data);
   try {
     const response = await axios.post(`${URL}${url}`, data, {
       withCredentials: true,
@@ -19,7 +18,7 @@ const postFetcher = async function (url, { arg }) {
         "Content-Type": "application/json",
       },
     });
-    return response.data.message;
+    return response.data;
   } catch (error) {
     throw error.response?.data.error;
   }

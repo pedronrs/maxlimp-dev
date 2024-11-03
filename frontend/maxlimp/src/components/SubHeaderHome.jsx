@@ -1,17 +1,22 @@
 import { useProducts } from "../contexts/ProductsProvider";
 import SubHeaderPage from "./SubHeaderPage";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function SubHeaderHome({ user }) {
   const { pathname: location, hash } = useLocation();
 
-  const { cleanSearch } = useProducts();
+  const { cleanSearch, setProducts } = useProducts();
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex justify-start items-center gap-10 py-4 pb-8">
       <SubHeaderPage
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
           cleanSearch();
+          setProducts(undefined);
+          navigate("/");
         }}
         active={location === "/" && hash.slice(1) !== "contatos"}
         to="/"

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function UserBox({ user }) {
   return (
     <Link
-      to="/perfil"
+      to="/configuracoes"
       className="flex items-center justify-center flex-col gap-2 text-indigo-600"
     >
       {user.avatar === "default" ? (
@@ -18,7 +18,7 @@ function UserBox({ user }) {
       )}
 
       <span className="text-md tracking-wide capitalize max-w-16 text-ellipsis overflow-hidden ">
-        {user.name}
+        {user.name.trim().split(" ")[0]}
       </span>
     </Link>
   );

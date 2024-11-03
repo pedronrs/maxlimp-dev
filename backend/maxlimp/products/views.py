@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.status import *
 
+import json
+
 
 from .orm import *
 # Create your views here.
@@ -21,10 +23,10 @@ class FuzzyProducts(APIView):
 
         query = request.query_params.get("query")
 
-        filters = request.query_params.get("filters")
+        filters = json.loads(request.query_params.get("filters"))
 
-        categories = filters["categories"]
-        price = filters["price"]
+        categories = filters.get("categories")
+        price = filters.get("price")
 
         if not query:
             return Response([], status=HTTP_200_OK)
@@ -35,21 +37,22 @@ class FuzzyProducts(APIView):
 
 
 class FilterProducts(APIView):
-    def get(self, request):
-        
-        filters = request.query_params.get("filters")
+    def post(self, request):
 
-        categories = filters["categories"]
-        price = filters["price"]
+        categories = request.data.get("categories")
+        price = request.data.get("price")
 
-        products = filter_products(categories, min, max)
+        print(categories, price)
+
+        products = filter_products(categories, price["min"], price["max"])
+
 
         return Response(products, status=HTTP_200_OK)
 
 
 class FilterLengthResults(APIView):
     def get(self, request):
-        filters = request.query_params.get("filters")
+        filters = json.loads(request.query_params.get("filters"))
 
         categories = filters["categories"]
         price = filters["price"]

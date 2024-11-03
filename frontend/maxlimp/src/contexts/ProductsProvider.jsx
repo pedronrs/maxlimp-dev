@@ -1,8 +1,9 @@
 import { createContext, useContext, useReducer } from "react";
 
 const initialState = {
-  products: null,
+  products: undefined,
   search: false,
+  filterIsActive: false,
 };
 
 const authReducer = (state, action) => {
@@ -16,7 +17,9 @@ const authReducer = (state, action) => {
         search: action.payload.search,
       };
     case "cleanSearch":
-      return { ...state, products: [], search: false };
+      return { ...state, search: false };
+    case "filterActive":
+      return { ...state, filterIsActive: action.payload };
     default:
       return state;
   }
@@ -25,7 +28,7 @@ const authReducer = (state, action) => {
 const ProductsContext = createContext();
 
 const ProductsProvider = ({ children }) => {
-  const [{ products, search }, dispatch] = useReducer(
+  const [{ products, search, filterIsActive }, dispatch] = useReducer(
     authReducer,
     initialState
   );
@@ -37,9 +40,25 @@ const ProductsProvider = ({ children }) => {
     dispatch({ type: "cleanSearch" });
   };
 
+  const setProducts = (payload) => {
+    dispatch({ type: "defineProducts", payload });
+  };
+
+  const setFilter = (payload) => {
+    dispatch({ type: "filterActive", payload });
+  };
+
   return (
     <ProductsContext.Provider
-      value={{ products, searchProducts, search, cleanSearch }}
+      value={{
+        products,
+        searchProducts,
+        search,
+        setProducts,
+        cleanSearch,
+        filterIsActive,
+        setFilter,
+      }}
     >
       {children}
     </ProductsContext.Provider>
