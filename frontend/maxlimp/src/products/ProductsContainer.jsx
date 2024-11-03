@@ -1,47 +1,42 @@
-import Loading from "../components/Loading";
-import { getFetcher } from "../services/data";
-import { useProducts } from "../contexts/ProductsProvider";
-
-import useSWR from "swr";
-import ProductBox from "./ProductBox";
-import ProductsTitle from "./ProductsTitle";
+import React from 'react';
+import { Grid, CircularProgress, Typography } from '@mui/material';
+import useSWR from 'swr';
+import { getFetcher } from '../services/data';
+import { useProducts } from '../contexts/ProductsProvider';
+import ProductBox from './ProductBox';
+import ProductsTitle from './ProductsTitle';
 
 function ProductsContainer() {
   const { products, search } = useProducts();
-
   const { data, isLoading } = useSWR("products/all-products/", getFetcher);
 
   const productsToDisplay = search ? products : data;
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <>
         <ProductsTitle>{search ? `"${search}"` : "em destaque"}</ProductsTitle>
-        <div className="flex items-center justify-center">
-          <Loading classNames="h-36" />
-        </div>
+        <Grid container justifyContent="center" alignItems="center">
+          <CircularProgress />
+        </Grid>
       </>
     );
+  }
 
-  const displayableProducts =
-    productsToDisplay?.length > 5
-      ? productsToDisplay.slice(0, 5)
-      : productsToDisplay;
+  const displayableProducts = productsToDisplay?.length > 5
+    ? productsToDisplay.slice(0, 5)
+    : productsToDisplay;
 
   return (
     <>
       <ProductsTitle>{search ? `"${search}"` : "em destaque"}</ProductsTitle>
-      <div
-        className={`gap-8 flex items-center ${
-          displayableProducts?.length === 5
-            ? "justify-between"
-            : "justify-start"
-        }`}
-      >
+      <Grid container spacing={2} justifyContent="center">
         {displayableProducts.map((product) => (
-          <ProductBox key={product.name} product={product} />
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={product.name}>
+            <ProductBox product={product} />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </>
   );
 }
