@@ -1,3 +1,4 @@
+import React from 'react';
 import { useProducts } from "../contexts/ProductsProvider";
 import SubHeaderPage from "./SubHeaderPage";
 import { useLocation, useNavigate } from "react-router-dom";

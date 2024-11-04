@@ -1,11 +1,61 @@
+import React from "react";
 import { CiShoppingCart } from "react-icons/ci";
+import { toast } from "react-toastify";
+import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthProvider";
 
-function AddToCart() {
+import CartCounter from "./CartCounter";
+import ProductButton from "./ProductButton";
+
+function AddToCart({ product }) {
+  const { addToCart, getQuantity, updateQuantity } = useCart();
+  const { user } = useAuth();
+
+  const cartQuantity = getQuantity(product.name);
+
+  const handleAdd = () => {
+    if (!user) {
+      toast.error("Faça login!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
+      return;
+    }
+    addToCart(product);
+    toast.success("Produto adicionado!", {
+      position: "top-right",
+      autoClose: 1000,
+    });
+  };
+
+  const handleEdit = (vector) => {
+    if (cartQuantity + vector === 0) {
+      addToCart(product);
+      toast.error("Produto removido!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
+    }
+    updateQuantity(product.name, cartQuantity + vector);
+  };
+
   return (
-    <button className="rounded-md px-4 py-2 bg-indigo-600 transition-all duration-300 hover:bg-indigo-700 flex items-center justify-center gap-4 text-slate-50 text-sm uppercase tracking-wide">
-      <CiShoppingCart className="w-8 h-8 fill-slate-50" />
-      Adicionar
-    </button>
+    <div>
+      {" "}
+      <>
+        {cartQuantity === 0 ? (
+          <ProductButton onClick={handleAdd}>
+            <CiShoppingCart className="w-8 h-8 fill-slate-50" />
+            Adicionar
+          </ProductButton>
+        ) : (
+          <ProductButton type="div" onClick={() => {}}>
+            <CartCounter quantity={cartQuantity} onClick={handleEdit} />
+            Editar
+          </ProductButton>
+        )}
+      </>
+    </div>
   );
 }
 

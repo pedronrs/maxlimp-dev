@@ -1,14 +1,7 @@
 import { Link } from "react-router-dom";
 
 function ConfigList({ active }) {
-  const paths = [
-    "perfil",
-    "endereços",
-    "pedidos",
-    "carrinho",
-    "favoritos",
-    "suporte",
-  ];
+  const paths = ["perfil", "endereços", "pedidos", "suporte"];
   return (
     <div className="flex-col flex  gap-4 border-r-stone-500 border-r-2 divide-indigo-100 items-start justify-start pr-4 pt-8">
       {paths.map((path) => (

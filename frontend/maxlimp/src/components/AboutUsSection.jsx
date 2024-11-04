@@ -5,7 +5,7 @@ function AboutUsSection() {
   return (
     <div className="relative text-slate-50">
       <img
-        className="w-full object-cover h-[600px] "
+        className="w-full object-cover h-[700px] "
         src={aboutUs}
         alt="Uma pessoa limpando um vidro"
       />

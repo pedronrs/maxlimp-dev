@@ -66,9 +66,9 @@ class FilterLengthResults(APIView):
 
 class EspecificProduct(APIView):
     def get(self, request):
-        product_name = request.query_params.get("product")
+        product_id = request.query_params.get("product")
 
-        product = get_especific_product(product_name)
+        product = get_especific_product(product_id)
 
         return Response(product, status=HTTP_200_OK)
     

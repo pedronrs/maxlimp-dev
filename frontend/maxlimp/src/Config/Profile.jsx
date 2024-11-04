@@ -109,7 +109,7 @@ function Profile() {
         </div>
       </div>
       <div className="flex flex-col items-end justify-start">
-        <Avatar avatar={avatar} />
+        <Avatar name={upName} avatar={avatar} />
       </div>
     </div>
   );

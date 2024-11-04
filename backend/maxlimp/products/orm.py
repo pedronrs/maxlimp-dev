@@ -12,6 +12,7 @@ def get_products():
 
     for product in products:
         products_list.append({
+            "id": product.id,
             "name": product.name,
             "price": product.price,
             "image": product.image,
@@ -52,8 +53,8 @@ def fuzzy_search_products(query, categories, min, max, threshold=50):
     return matched_products
 
 
-def get_especific_product(product_name):
-    product = Product.objects.filter(name=product_name).first()
+def get_especific_product(product_id):
+    product = Product.objects.filter(pk=product_id).first()
 
     if not product:
         return {}
