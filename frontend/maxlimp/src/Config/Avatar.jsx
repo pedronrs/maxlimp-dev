@@ -1,21 +1,73 @@
 import { FaUser } from "react-icons/fa";
+import Loading from "../components/Loading";
 
-function Avatar({ avatar }) {
+import useSWRMutation from "swr/mutation";
+import { putFileFetcher } from "../services/data";
+
+import { useAuth } from "../contexts/AuthProvider";
+
+function Avatar() {
+  const { trigger, isMutating, error } = useSWRMutation(
+    "auth/avatar/",
+    putFileFetcher
+  );
+
+  const { updateUser, user } = useAuth();
+
+  const { avatar, name } = user;
+
+  async function handleAvatar(e) {
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    try {
+      const response = await trigger(formData);
+
+      updateUser({ avatar: response.fileUrl });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
-    <>
-      <input className="hidden" type="file" id="imageInput" accept="image/*" />
-      <label className="cursor-pointer" htmlFor="imageInput">
-        {avatar === "default" ? (
-          <FaUser className="w-32 h-32 fill-indigo-600 rounded-md" />
-        ) : (
-          <img
-            src={avatar}
-            alt="Avatar"
-            className="w-24 h-24 rounded-md overflow-hidden object-cover "
-          />
-        )}
-      </label>
-    </>
+    <div className="flex flex-col gap-2 items-center justify-center">
+      <input
+        onChange={handleAvatar}
+        className="hidden"
+        type="file"
+        id="imageInput"
+        accept="image/*"
+      />
+
+      {error && <span className="text-red-500 text-sm">{error}</span>}
+      {isMutating ? (
+        <Loading classNames="h-32" />
+      ) : (
+        <label className="cursor-pointer" htmlFor="imageInput">
+          {avatar === "default" ? (
+            <FaUser className="w-32 h-32 fill-indigo-600 rounded-md" />
+          ) : (
+            <img
+              src={avatar}
+              alt="Avatar"
+              className="w-32 h-32 rounded-md overflow-hidden object-cover "
+            />
+          )}
+        </label>
+      )}
+
+      {avatar === "default" || (
+        <button className="w-32 bg-red-500 uppercase px-4 py-2 flex items-center justify-center">
+          apagar
+        </button>
+      )}
+      <span className="text-sm capitalize tracking-wide max-w-xs overflow-hidden text-ellipsis">
+        {name}
+      </span>
+    </div>
   );
 }
 

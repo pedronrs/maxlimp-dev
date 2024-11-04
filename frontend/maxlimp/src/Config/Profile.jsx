@@ -100,6 +100,7 @@ function Profile() {
           <Logout />
           <DeleteAccount />
           <Save
+            setShow={setCanSave}
             setError={setError}
             name={upName}
             phone={upPhone}
@@ -109,7 +110,7 @@ function Profile() {
         </div>
       </div>
       <div className="flex flex-col items-end justify-start">
-        <Avatar name={upName} avatar={avatar} />
+        <Avatar />
       </div>
     </div>
   );

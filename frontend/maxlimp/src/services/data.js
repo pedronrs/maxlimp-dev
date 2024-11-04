@@ -54,6 +54,21 @@ const putFetcher = async function (url, { arg }) {
   }
 };
 
+const putFileFetcher = async function (url, { arg }) {
+  try {
+    const response = await axios.put(`${URL}${url}`, arg, {
+      withCredentials: true,
+
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data;
+  }
+};
+
 const deleteFetcher = async function (url) {
   try {
     const response = await axios.delete(`${URL}${url}`, {
@@ -84,4 +99,11 @@ const getFetcher = async function (url) {
   }
 };
 
-export { postFetcher, getFetcher, patchFetcher, deleteFetcher, putFetcher };
+export {
+  postFetcher,
+  getFetcher,
+  patchFetcher,
+  deleteFetcher,
+  putFetcher,
+  putFileFetcher,
+};

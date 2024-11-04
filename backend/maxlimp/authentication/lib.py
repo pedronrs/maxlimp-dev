@@ -2,6 +2,12 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.files.storage import FileSystemStorage
+
+import os
+import secrets
+import string
+
 
 
 from rest_framework.response import Response
@@ -13,9 +19,17 @@ from random import randint
 import jwt
 import re
 
+from .orm import *
+
 from .const import *
 
 from .models import *
+
+from supabase import create_client
+
+supabase_client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+
 
 def validate_redefine_password_fields(password, new_password):
     errors = {}
@@ -219,3 +233,55 @@ def resset_password_email(email):
     
     return token
 
+
+def generate_token(length=10):
+    alphabet = string.ascii_letters + string.digits  
+    token = ''.join(secrets.choice(alphabet) for _ in range(length))
+    return token
+
+
+
+def send_avatar(image, email):
+    fs = FileSystemStorage(location="authentication/temp/")
+
+    _, file_extension = os.path.splitext(image.name)
+
+    filename = fs.save(f"{generate_token(15)}{file_extension}", image)
+
+    filepath = fs.path(filename)
+
+
+    path_on_supastorage = f"{filename}"
+
+    try:
+        with open(filepath, 'rb') as f:
+            supabase_client.storage.from_("avatars").upload(
+                path=path_on_supastorage,
+                file=f,
+                file_options={"content-type": image.content_type}
+            )
+    except Exception as e:
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        
+
+    url = f"{SUPABASE_URL}/storage/v1/object/public/avatars/{path_on_supastorage}"
+
+    old_avatar = get_avatar(email)
+
+    if old_avatar:
+        res = supabase_client.storage.from_("avatars").remove(old_avatar.split("/")[-1])
+
+
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
+
+    save_avatar(email, url)
+
+    return url
+
+
+def remove_avatar(old_avatar):
+    if old_avatar:
+            res = supabase_client.storage.from_("avatars").remove(old_avatar.split("/")[-1])

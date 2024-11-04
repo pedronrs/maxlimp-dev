@@ -14,7 +14,6 @@ function Config() {
     <div>
       <HeaderHome showSearch={false} />
       <ConfigContainer config={path} />
-      <Footer />
     </div>
   );
 }

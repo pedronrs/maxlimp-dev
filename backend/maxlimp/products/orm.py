@@ -92,8 +92,3 @@ def get_especific_product(product_id):
 
 
 
-
-""" senha supabase FXisN4m0HJ7vwcKe
-url https://vmorglmppqgytzksajfe.supabase.co
-senha rls eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtb3JnbG1wcHFneXR6a3NhamZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAxNjg2OTQsImV4cCI6MjA0NTc0NDY5NH0.i3R-Mp4sqXwSF7HG_1emxsFwzDpcaeY8ykYco-KkY58
- """

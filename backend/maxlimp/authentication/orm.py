@@ -4,8 +4,32 @@ from .models import *
 from .execptions import *
 
 
+
+
+def get_avatar(email):
+    user = User.objects.get(email=email)
+
+    if user.avatar == "default":
+        return False
+    
+    return user.avatar
+
+
+def save_avatar(email, url:str):
+    user = User.objects.get(email=email)
+    user.avatar = url 
+
+    user.save()
+
 def get_user(email):
     return User.objects.filter(email=email).first()
+
+def reset_avatar(email):
+    user = User.objects.get(email=email)
+
+    user.image = "default"
+
+    user.save()
 
 
 def user_exists(email):
@@ -80,3 +104,17 @@ def update_user(email, phone, name):
     user.name = name   
 
     user.save()
+
+
+
+def update_avatar(avatar):
+    pass
+
+
+
+
+""" senha supabase FXisN4m0HJ7vwcKe
+url https://vmorglmppqgytzksajfe.supabase.co
+senha rls eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtb3JnbG1wcHFneXR6a3NhamZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAxNjg2OTQsImV4cCI6MjA0NTc0NDY5NH0.i3R-Mp4sqXwSF7HG_1emxsFwzDpcaeY8ykYco-KkY58
+ """
+

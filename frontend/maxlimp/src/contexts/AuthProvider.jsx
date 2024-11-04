@@ -22,8 +22,12 @@ const AuthProvider = ({ children }) => {
     dispatch({ type: "login", payload: user });
   };
 
+  const updateUser = (change) => {
+    dispatch({ type: "login", payload: { ...user, ...change } });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ updateUser, user, setUser }}>
       {children}
     </AuthContext.Provider>
   );

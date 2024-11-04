@@ -4,8 +4,10 @@ from rest_framework import status
 
 from django.contrib.auth.hashers import check_password
 
+import os
 from .lib import *
 from .orm import *
+from django.core.files.storage import FileSystemStorage
 
 
 class ResendEmailCodeAPI(APIView):
@@ -368,3 +370,65 @@ class CheckAuthAPI(APIView):
         }
 
         return Response({"message": "Usuário autenticado com sucesso.", "user": user_obj, "type": "authenticated"}, status=status.HTTP_200_OK)
+    
+
+
+
+
+class ChangeAvatarAPI(APIView):
+    def put(self, request):
+        temp_auth = request.COOKIES.get("temp_auth")
+        auth = request.COOKIES.get("auth")
+
+     
+
+       
+        if temp_auth is not None:
+            if decode_jwt(temp_auth).get("invalid") is None: 
+                return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
+                                status=status.HTTP_200_OK)
+
+        if auth is not None:
+            if decode_jwt(auth).get("invalid"): 
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        
+
+        image = request.FILES["file"]
+
+        user = get_user(decode_jwt(auth)["email"])
+
+        url = send_avatar(image, user)
+  
+        return Response({'fileUrl': url})
+    
+
+class RemoveAvatarAPI(APIView):
+    def delete(self, request):
+        temp_auth = request.COOKIES.get("temp_auth")
+        auth = request.COOKIES.get("auth")
+
+       
+        if temp_auth is not None:
+            if decode_jwt(temp_auth).get("invalid") is None: 
+                return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
+                                status=status.HTTP_200_OK)
+
+        if auth is not None:
+            if decode_jwt(auth).get("invalid"): 
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        
+
+        user = get_user(decode_jwt(auth)["email"])
+        
+        old_avatar = get_avatar(user)
+
+        reset_avatar(request.user.id)
+
+        remove_avatar(old_avatar)
+
+
+        return Response({"message": "Avatar deleted"})

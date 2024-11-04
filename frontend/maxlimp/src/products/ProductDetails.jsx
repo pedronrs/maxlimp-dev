@@ -13,17 +13,20 @@ function ProductDetails() {
     `products/especific-product?product=${id}`,
     getFetcher
   );
-
-  if (!product) {
+  console.log(product);
+  if (!product?.description) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Typography variant="h5">Produto não encontrado</Typography>
-      </Box>
+      <>
+        <HeaderHome showSearch={false} />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
+          <Typography variant="h5">Produto não encontrado</Typography>
+        </Box>
+      </>
     );
   }
 

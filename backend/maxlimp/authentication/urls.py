@@ -11,4 +11,6 @@ urlpatterns = [
     path("check-auth/", CheckAuthAPI.as_view(), name="check-auth"),
     path("delete/", DeleteAccountAPI.as_view(), name="delete-account"),
     path("update/", UpdateAccountAPI.as_view(), name="update-account"),
+    path("avatar/", ChangeAvatarAPI.as_view(), name="change-avatar"),
+    path("remove-avatar/", RemoveAvatarAPI.as_view(), name="remove-avatar"),
 ]

@@ -2,7 +2,7 @@ import useSWRMutation from "swr/mutation";
 import { putFetcher } from "../services/data";
 import { useState } from "react";
 
-function Save({ name, phone, reset, show, setError }) {
+function Save({ name, phone, reset, show, setError, setShow }) {
   const { trigger, isMutating } = useSWRMutation("auth/update/", putFetcher);
 
   if (!show) return null;
@@ -23,7 +23,7 @@ function Save({ name, phone, reset, show, setError }) {
             } catch (e) {
               setError(e.error);
             }
-            reset();
+            setShow(false);
           }}
           disabled={isMutating}
           className="px-4 py-2 rounded-md bg-indigo-600 text-slate-50 uppercase"
