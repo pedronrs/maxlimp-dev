@@ -1,15 +1,14 @@
 import useSWRMutation from "swr/mutation";
 import { postFetcher } from "../services/data";
 
-function AuthRessendCode({ children, setError }) {
-  const { trigger, isMutating } = useSWRMutation(
-    "http://127.0.0.1:8000/api/auth/recode/",
-    postFetcher
-  );
+function AuthRessendCode({ children, setError, setRessended, ressended }) {
+  const { trigger, isMutating } = useSWRMutation("auth/recode/", postFetcher);
 
   const handleValidate = async function () {
+    if (ressended) setError("Você já solicitou o reenvio do código.");
     try {
       await trigger();
+      setRessended(true);
     } catch (error) {
       setError(error);
     }

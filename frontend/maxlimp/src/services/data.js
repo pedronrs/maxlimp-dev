@@ -39,6 +39,36 @@ const patchFetcher = async function (url, { arg }) {
   }
 };
 
+const putFetcher = async function (url, { arg }) {
+  try {
+    const response = await axios.put(`${URL}${url}`, arg, {
+      withCredentials: true,
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data;
+  }
+};
+
+const deleteFetcher = async function (url) {
+  try {
+    const response = await axios.delete(`${URL}${url}`, {
+      withCredentials: true,
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data;
+  }
+};
+
 const getFetcher = async function (url) {
   try {
     const response = await axios.get(`${URL}${url}`, {
@@ -54,4 +84,4 @@ const getFetcher = async function (url) {
   }
 };
 
-export { postFetcher, getFetcher, patchFetcher };
+export { postFetcher, getFetcher, patchFetcher, deleteFetcher, putFetcher };

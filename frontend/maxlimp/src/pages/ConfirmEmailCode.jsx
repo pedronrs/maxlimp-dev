@@ -14,6 +14,8 @@ function ConfirmEmailCode() {
   const [error, setError] = useState("");
   const [code, setCode] = useState("");
 
+  const [ressended, setRessended] = useState(false);
+
   const { trigger, isMutating } = useSWRMutation("auth/code/", postFetcher);
 
   const handleValidate = async function () {
@@ -30,16 +32,23 @@ function ConfirmEmailCode() {
   return (
     <AuthLayout onSend={handleValidate} name="Validação">
       {error && <p className="text-sm text-red-500">{error}</p>}
+      <p className=" text-start text-stone-800">
+        Insira o código enviado para o seu emal.
+      </p>
       <BaseInput
         name="codigo"
-        placeholder="421212"
+        placeholder="000000"
         value={code}
         setValue={setCode}
       />
 
       <div>
         <AuthButton disabled={isMutating} name="confirmar" />
-        <AuthRessendCode setError={setError}>
+        <AuthRessendCode
+          setError={setError}
+          ressended={ressended}
+          setRessended={setRessended}
+        >
           Reenviar o código!
         </AuthRessendCode>
       </div>

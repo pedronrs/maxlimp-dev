@@ -13,7 +13,7 @@ function Config() {
   return (
     <div>
       <HeaderHome showSearch={false} />
-      <ConfigContainer />
+      <ConfigContainer config={path} />
       <Footer />
     </div>
   );

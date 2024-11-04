@@ -70,3 +70,13 @@ def delete_user(email):
     except Exception as e:
         raise ORMError(f"Erro ao deletar usuário: {str(e)}")
     return user
+
+
+
+def update_user(email, phone, name):
+    user = get_user(email)
+
+    user.phone = phone
+    user.name = name   
+
+    user.save()

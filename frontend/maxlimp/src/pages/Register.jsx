@@ -21,7 +21,12 @@ function Register() {
 
   const [error, setError] = useState("");
 
-  const { trigger, isMutating } = useSWRMutation("auth/register/", postFetcher);
+  const { trigger, isMutating: loading } = useSWRMutation(
+    "auth/register/",
+    postFetcher
+  );
+
+  const [isMutating, setIsMutating] = useState(loading);
 
   const handleRegister = async function () {
     if (!password || !email || !phone || !name)
@@ -29,8 +34,10 @@ function Register() {
 
     setError("");
     try {
+      setIsMutating(true);
       await trigger({ name, phone, email, password });
       navigate("/validacao");
+      setIsMutating(false);
     } catch (error) {
       setError(error);
     }

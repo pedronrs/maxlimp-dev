@@ -3,29 +3,14 @@ import AuthButtons from "./AuthButtons";
 
 import SearchInput from "./SearchInput";
 
-import useSWR from "swr";
-import { getFetcher } from "../services/data";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
 import UserBox from "./UserBox";
-import { useAuth } from "../contexts/AuthProvider";
-import { useEffect } from "react";
+
 import SubHeaderHome from "./SubHeaderHome";
+import { useAuth } from "../contexts/AuthProvider";
 
 function HeaderHome({ showSearch = true }) {
-  const { data } = useSWR("auth/check-auth/", getFetcher);
-
-  const { setUser } = useAuth();
-
-  const user = data?.user;
-
-  console.log(user);
-
-  useEffect(() => {
-    if (user) {
-      setUser(user);
-    }
-  }, []);
-
+  const { user } = useAuth();
   return (
     <header className=" px-12 bg-indigo-50 flex flex-col items-start justify-center">
       <div className="flex py-6 w-full justify-between items-center  gap-12">

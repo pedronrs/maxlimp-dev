@@ -7,6 +7,8 @@ urlpatterns = [
     path("code/", EmailCodeAPI.as_view(), name="email-code"),
     path("recode/", ResendEmailCodeAPI.as_view(), name="re-email-code"),
     path("logout/", LogoutAPI.as_view(), name="logout"),
-    path("redefine-password/", RedefinePasswordAPI.as_view(), name="redefine-password"),
+    path("redefine-password/", RedefinePasswordAPI.as_view(),name="redefine-password"),
     path("check-auth/", CheckAuthAPI.as_view(), name="check-auth"),
+    path("delete/", DeleteAccountAPI.as_view(), name="delete-account"),
+    path("update/", UpdateAccountAPI.as_view(), name="update-account"),
 ]
