@@ -1,6 +1,7 @@
 import { HiCog6Tooth } from "react-icons/hi2";
 import ConfigList from "./ConfigList";
 import Profile from "./Profile";
+import Address from "./Address";
 
 function ConfigContainer({ config }) {
   let Path;
@@ -13,6 +14,9 @@ function ConfigContainer({ config }) {
       break;
     case "perfil":
       Path = Profile;
+      break;
+    case "endereços":
+      Path = Address;
       break;
     default:
       Path = "";

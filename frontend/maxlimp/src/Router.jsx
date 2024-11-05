@@ -7,9 +7,10 @@ import ConfirmEmailCode from "./pages/ConfirmEmailCode";
 import AboutUs from "./pages/AboutUs";
 import Config from "./pages/Config";
 import Cart from "./pages/Cart";
-import ShippingAddress from "./pages/ShippingAddress";
-import Payment from "./pages/payment";
+
 import ProductDetails from "./products/ProductDetails";
+import Address from "./pages/Address";
+import { AdddresssProvider } from "./contexts/AddressProvider";
 
 const router = createBrowserRouter([
   {
@@ -41,16 +42,12 @@ const router = createBrowserRouter([
     element: <AboutUs />,
   },
   {
-    path: "cart/",
+    path: "carrinho/",
     element: <Cart />,
   },
   {
-    path: "shipping/",
-    element: <ShippingAddress />,
-  },
-  {
-    path: "payment/",
-    element: <Payment />,
+    path: "compra/",
+    element: <Address />,
   },
   {
     path: "product/:id",

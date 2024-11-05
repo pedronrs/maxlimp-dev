@@ -2,7 +2,7 @@ import { FaUser } from "react-icons/fa";
 import Loading from "../components/Loading";
 
 import useSWRMutation from "swr/mutation";
-import { putFileFetcher } from "../services/data";
+import { deleteFetcher, putFileFetcher } from "../services/data";
 
 import { useAuth } from "../contexts/AuthProvider";
 
@@ -12,12 +12,19 @@ function Avatar() {
     putFileFetcher
   );
 
+  const { trigger: remove, isMutating: removing } = useSWRMutation(
+    "auth/remove-avatar/",
+    deleteFetcher
+  );
+
   const { updateUser, user } = useAuth();
 
   const { avatar, name } = user;
 
   async function handleAvatar(e) {
     const file = e.target.files[0];
+
+    if (!file) return;
 
     const formData = new FormData();
 
@@ -32,10 +39,23 @@ function Avatar() {
     }
   }
 
+  async function handleRemove() {
+    try {
+      await remove();
+
+      updateUser({ avatar: "default" });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-2 items-center justify-center">
+      <h3 className="text-2xl mb-4 tracking-wide font-extralight capitalize">
+        Avatar
+      </h3>
       <input
-        onChange={handleAvatar}
+        onInput={handleAvatar}
         className="hidden"
         type="file"
         id="imageInput"
@@ -43,7 +63,7 @@ function Avatar() {
       />
 
       {error && <span className="text-red-500 text-sm">{error}</span>}
-      {isMutating ? (
+      {isMutating || removing ? (
         <Loading classNames="h-32" />
       ) : (
         <label className="cursor-pointer" htmlFor="imageInput">
@@ -60,7 +80,11 @@ function Avatar() {
       )}
 
       {avatar === "default" || (
-        <button className="w-32 bg-red-500 uppercase px-4 py-2 flex items-center justify-center">
+        <button
+          onClick={handleRemove}
+          disabled={removing}
+          className="w-32 text-slate-50 bg-red-500 uppercase px-4 py-2 flex items-center justify-center"
+        >
           apagar
         </button>
       )}

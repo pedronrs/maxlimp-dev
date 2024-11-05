@@ -13,4 +13,7 @@ urlpatterns = [
     path("update/", UpdateAccountAPI.as_view(), name="update-account"),
     path("avatar/", ChangeAvatarAPI.as_view(), name="change-avatar"),
     path("remove-avatar/", RemoveAvatarAPI.as_view(), name="remove-avatar"),
+    path("address/", AddressAPI.as_view(), name="address"),
+    path("remove-address/", RemoveAddressAPI.as_view(), name="remove-address"),
+    path("get-address/", GetAddressAPI.as_view(), name="get-address"),
 ]

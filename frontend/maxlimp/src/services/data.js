@@ -84,6 +84,22 @@ const deleteFetcher = async function (url) {
   }
 };
 
+const deleteDataFetcher = async function (url, { arg }) {
+  console.log(arg);
+  try {
+    const response = await axios.delete(`${URL}${url}`, arg, {
+      withCredentials: true,
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data;
+  }
+};
+
 const getFetcher = async function (url) {
   try {
     const response = await axios.get(`${URL}${url}`, {
@@ -106,4 +122,5 @@ export {
   deleteFetcher,
   putFetcher,
   putFileFetcher,
+  deleteDataFetcher,
 };

@@ -717,6 +717,10 @@ video {
   margin-right: 0.75rem;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
 .mt-0 {
   margin-top: 0px;
 }
@@ -934,6 +938,14 @@ video {
   width: min-content;
 }
 
+.w-1\/2 {
+  width: 50%;
+}
+
+.w-1 {
+  width: 0.25rem;
+}
+
 .max-w-16 {
   max-width: 4rem;
 }
@@ -964,6 +976,10 @@ video {
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.grow-0 {
+  flex-grow: 0;
 }
 
 .basis-full {
@@ -1020,6 +1036,14 @@ video {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-default {
+  cursor: default;
+}
+
+.cursor-auto {
+  cursor: auto;
 }
 
 .resize {

@@ -426,9 +426,115 @@ class RemoveAvatarAPI(APIView):
         
         old_avatar = get_avatar(user)
 
-        reset_avatar(request.user.id)
-
         remove_avatar(old_avatar)
 
+        reset_avatar(user)
 
         return Response({"message": "Avatar deleted"})
+    
+
+
+
+class AddressAPI(APIView):
+    def post(self, request):
+
+        temp_auth = request.COOKIES.get("temp_auth")
+        auth = request.COOKIES.get("auth")
+
+       
+        if temp_auth is not None:
+            if decode_jwt(temp_auth).get("invalid") is None: 
+                return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
+                                status=status.HTTP_200_OK)
+
+        if auth is not None:
+            if decode_jwt(auth).get("invalid"): 
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        
+
+        user = get_user(decode_jwt(auth)["email"])
+
+
+        district = request.data.get("district")
+        complement = request.data.get("complement")
+        address = request.data.get("address")
+
+
+        error = save_address(district, address, complement, user)
+
+        print(error)
+
+        if error:
+            return Response({"error": error}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Endereço salvo com sucesso."}, status=status.HTTP_200_OK)
+
+
+
+
+class RemoveAddressAPI(APIView):
+     def post(self, request):
+
+        temp_auth = request.COOKIES.get("temp_auth")
+        auth = request.COOKIES.get("auth")
+
+        print(temp_auth, auth)
+
+       
+        if auth is not None:
+            if decode_jwt(auth).get("invalid"): 
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
+                                status=status.HTTP_400_BAD_REQUEST)
+            
+        else:
+            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+      
+
+        if temp_auth is not None:
+            if decode_jwt(temp_auth).get("invalid") is None: 
+                return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
+                                status=status.HTTP_400_BAD_REQUEST)
+        
+  
+        user = get_user(decode_jwt(auth)["email"])
+
+        address_id = request.data.get("addressId")
+
+        print(address_id, request.data)
+
+        remove_address(address_id, user)
+
+        return Response({"message": "Endereço deletado com sucesso."}, status=status.HTTP_200_OK)
+     
+
+
+
+
+class GetAddressAPI(APIView):
+     def get(self, request):
+
+        temp_auth = request.COOKIES.get("temp_auth")
+        auth = request.COOKIES.get("auth")
+
+       
+        if temp_auth is not None:
+            if decode_jwt(temp_auth).get("invalid") is None: 
+                return Response({"error": "O usuário está no processo de autenticação.", "type": "authenticating"},
+                                status=status.HTTP_200_OK)
+
+        if auth is not None:
+            if decode_jwt(auth).get("invalid"): 
+                return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "O usuário não está autenticado.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
+        
+
+        user = get_user(decode_jwt(auth)["email"])
+
+        addresses = get_addresses(user)
+
+        return Response(addresses, status=status.HTTP_200_OK)

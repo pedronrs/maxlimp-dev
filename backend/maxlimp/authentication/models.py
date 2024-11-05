@@ -29,3 +29,12 @@ class UserToken(models.Model):
     token = models.CharField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    address = models.CharField(max_length=500)
+    complement = models.CharField(max_length=500)
+    district = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

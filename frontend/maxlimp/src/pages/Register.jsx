@@ -40,6 +40,7 @@ function Register() {
       setIsMutating(false);
     } catch (error) {
       setError(error);
+      setIsMutating(false);
     }
   };
 

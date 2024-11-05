@@ -24,10 +24,10 @@ def save_avatar(email, url:str):
 def get_user(email):
     return User.objects.filter(email=email).first()
 
-def reset_avatar(email):
-    user = User.objects.get(email=email)
+def reset_avatar(user):
+    user = User.objects.get(email=user)
 
-    user.image = "default"
+    user.avatar = "default"
 
     user.save()
 
@@ -106,15 +106,47 @@ def update_user(email, phone, name):
     user.save()
 
 
+def save_address(district, address, complement, user):
+    user_addresses = Address.objects.filter(user=user)
+    
+    for user_address in user_addresses:
+        if user_address.address == address:
+            return "Endereço já cadastrado"
+        
 
-def update_avatar(avatar):
-    pass
+    if len(user_addresses) >= 15:
+        return "Limite de endereços atingido"
+    
+    try:
+        address = Address.objects.create(
+            user=user,
+            district=district,
+            address=address,
+            complement=complement
+        )
+
+        address.save()
+        return False
+    except:
+        return "Error durante a criação do endereço"
 
 
+def remove_address(id, user):
+    try:
+        address = Address.objects.filter(id=id, user=user).first()
+
+        address.delete()
+
+    except:
+        pass
 
 
-""" senha supabase FXisN4m0HJ7vwcKe
-url https://vmorglmppqgytzksajfe.supabase.co
-senha rls eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtb3JnbG1wcHFneXR6a3NhamZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAxNjg2OTQsImV4cCI6MjA0NTc0NDY5NH0.i3R-Mp4sqXwSF7HG_1emxsFwzDpcaeY8ykYco-KkY58
- """
+def get_addresses(user):
+    addresses = Address.objects.filter(user=user)
 
+    return [{
+        "id": adress.id,
+        "address": adress.address,
+        "complement": adress.complement,
+        "district": adress.district
+    } for adress in addresses ]

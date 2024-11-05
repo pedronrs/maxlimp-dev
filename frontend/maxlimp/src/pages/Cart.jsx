@@ -11,8 +11,11 @@ import Paper from "@mui/material/Paper";
 import CheckoutActions from "../components/CheckoutActions";
 import { Link } from "react-router-dom";
 import HeaderHome from "../components/HeaderHome";
+import useAuthRedirect from "../hooks/useAuthRedirect";
+import Address from "./Address";
 
 function Cart() {
+  useAuthRedirect("/carrinho", "/entrar");
   const { cart, updateQuantity } = useCart();
   const [selectedItems, setSelectedItems] = useState(cart.map((p) => p?.name));
 
@@ -32,9 +35,14 @@ function Cart() {
     });
   };
 
-  console.log(cart.length);
+  const total = selectedItems?.reduce((acc, el) => {
+    const cartCorr = cart.find(
+      (c) => el.toLowerCase() === c.name.toLowerCase()
+    );
+    return acc + cartCorr?.price * cartCorr?.quantity;
+  }, 0);
 
-  if (cart.length === 0) {
+  if (!cart?.length) {
     return (
       <>
         <HeaderHome showSearch={false} />
@@ -54,7 +62,7 @@ function Cart() {
     <>
       <HeaderHome showSearch={false} />
       <div className="p-4 flex justify-center">
-        <div className="w-7/10">
+        <div className="w-1/2">
           <h2 className="text-2xl font-semibold mb-4">Carrinho</h2>
           <TableContainer component={Paper} className="shadow-lg">
             <Table aria-label="cart table">
@@ -110,9 +118,20 @@ function Cart() {
               </TableBody>
             </Table>
           </TableContainer>
-          <CheckoutActions selectedItems={selectedItems} cart={cart} />
+          <span className="block text-xl mt-4 ">
+            Total R$
+            {total.toFixed(2)}
+          </span>
         </div>
       </div>
+      <Address
+        selectedItems={selectedItems?.map((c) => {
+          return cart.find((d) => {
+            return c.toLowerCase() === d.name.toLowerCase();
+          });
+        })}
+        total={total}
+      />
     </>
   );
 }

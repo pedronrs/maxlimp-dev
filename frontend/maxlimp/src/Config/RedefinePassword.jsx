@@ -19,8 +19,6 @@ function RedefinePassword() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(defaultError?.error);
 
-  console.log(error);
-
   useEffect(() => {
     if (data?.message) {
       setMessage(data?.message);

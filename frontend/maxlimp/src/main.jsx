@@ -10,18 +10,21 @@ import { CartProvider } from "./contexts/CartContext";
 import { OrderProvider } from "./contexts/OrderContext";
 
 import { FilterProvider } from "./contexts/FilterProvider";
+import { AdddresssProvider } from "./contexts/AddressProvider";
 
 createRoot(document.getElementById("root")).render(
   <CartProvider>
     <StrictMode>
       <AuthProvider>
-        <FilterProvider>
-          <OrderProvider>
-            <ProductsProvider>
-              <RouterProvider router={router} />
-            </ProductsProvider>
-          </OrderProvider>
-        </FilterProvider>
+        <AdddresssProvider>
+          <FilterProvider>
+            <OrderProvider>
+              <ProductsProvider>
+                <RouterProvider router={router} />
+              </ProductsProvider>
+            </OrderProvider>
+          </FilterProvider>
+        </AdddresssProvider>
       </AuthProvider>
     </StrictMode>
   </CartProvider>
