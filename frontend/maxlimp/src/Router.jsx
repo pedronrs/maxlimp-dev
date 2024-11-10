@@ -11,6 +11,7 @@ import Cart from "./pages/Cart";
 import ProductDetails from "./products/ProductDetails";
 import Address from "./pages/Address";
 import { AdddresssProvider } from "./contexts/AddressProvider";
+import { Admin } from "./pages/Admin";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
   {
     path: "product/:id",
     element: <ProductDetails />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />,
   },
 ]);
 
