@@ -1,4 +1,4 @@
-import { postFetcher, getFetcher } from "../services/data";
+import { getFetcher } from "../services/data";
 import { useProducts } from "../contexts/ProductsProvider";
 import { useFilter } from "../contexts/FilterProvider";
 
@@ -7,16 +7,24 @@ import ProductBox from "./ProductBox";
 import ProductsTitle from "./ProductsTitle";
 import Tag from "../components/Tag";
 
-import React from "react";
-import { Grid, CircularProgress, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Grid, CircularProgress, Box, Pagination } from "@mui/material";
 
 function ProductsContainer() {
   const { products, search, setProducts, setFilter } = useProducts();
   const { categories, price, handleCategoryChange } = useFilter();
+  const [page, setPage] = useState(1);
+  const maxItens = 2; // Quantidade para teste, mudar depois da adição de mais produtos
+  const [totalPages, setTotalPages] = useState(1);
 
   const { data, isLoading } = useSWR("products/all-products/", getFetcher);
 
-  const productsToDisplay = products !== undefined ? products : data;
+  useEffect(() => {
+    if (data) {
+      setProducts(data);
+      setTotalPages(Math.ceil(data.length / maxItens));
+    }
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -29,10 +37,12 @@ function ProductsContainer() {
     );
   }
 
-  const displayableProducts =
-    productsToDisplay?.length > 5
-      ? productsToDisplay.slice(0, 5)
-      : productsToDisplay;
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  const startIndex = (page - 1) * maxItens;
+  const displayableProducts = data.slice(startIndex, startIndex + maxItens);
 
   return (
     <>
@@ -53,14 +63,7 @@ function ProductsContainer() {
             : ""}
         </div>
       </ProductsTitle>
-      <div
-        className={`gap-8 flex items-center ${
-          displayableProducts?.length === 5
-            ? "justify-between"
-            : "justify-start"
-        }`}
-      >
-        {" "}
+      <div className={`gap-8 flex items-center justify-center`}>
         <Grid container spacing={2} justifyContent="center">
           {displayableProducts.map((product) => (
             <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={product.name}>
@@ -69,6 +72,14 @@ function ProductsContainer() {
           ))}
         </Grid>
       </div>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
     </>
   );
 }

@@ -77,6 +77,7 @@ def get_especific_product(product_id):
     ]
 
     product_obj = {
+        "id": product.id,
         "name": product.name,
         "description": product.description,
         "image": product.image,

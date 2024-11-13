@@ -1,7 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.status import *
-
+from django.utils import timezone
+from .models import Rating, Product
+from authentication.models import User
 import json
 
 
@@ -75,4 +77,34 @@ class EspecificProduct(APIView):
 
 class RateProduct(APIView):
     def post(self, request):
-        pass
+        try:
+            rating_data = request.data.get("rating")
+            user_data = request.data.get("user")
+            product_id = request.data.get("product_id")
+            stars = rating_data.get("stars")
+            title = rating_data.get("title")
+            comment = rating_data.get("comment")
+
+            product = Product.objects.get(id=product_id)
+    
+            user, created = User.objects.get_or_create(
+                name=user_data.get("name"),
+                defaults={'first_name': user_data.get("name")}
+            )
+            print("User found or created:", user)
+
+            rating = Rating.objects.create(
+                product_id=product,
+                user_id=user,
+                stars=stars,
+                title=title,
+                comment=comment,
+                created_at=timezone.now(),
+                updated_at=timezone.now()
+            )
+            return Response({"message": "Comentário adicionado com sucesso!"}, status=HTTP_201_CREATED)
+        except Product.DoesNotExist:
+            return Response({"error": "Produto não encontrado."}, status=HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print("Error:", str(e))
+            return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)

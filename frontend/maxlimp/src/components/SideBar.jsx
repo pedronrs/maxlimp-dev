@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useProducts } from '../contexts/ProductsProvider';
 import { useLocation } from 'react-router-dom';
 
-function Sidebar({ user }) {
+export function Sidebar({user}) {
   const { cleanSearch } = useProducts();
   const { pathname: location, hash } = useLocation();
   const [open, setOpen] = React.useState(false);
@@ -21,7 +21,6 @@ function Sidebar({ user }) {
         aria-label="open drawer"
         edge="start"
         onClick={toggleDrawer}
-        sx={{ display: { sm: 'none' } }}
       >
         <MenuIcon />
       </IconButton>
@@ -46,10 +45,13 @@ function Sidebar({ user }) {
           <ListItem button component={Link} to="#contatos" onClick={cleanSearch} selected={location === "/" && hash.slice(1) === "contatos"}>
             <ListItemText primary="Contatos" />
           </ListItem>
+          {user.type == 'admin' && (
+          <ListItem button component={Link} to="/admin" onClick={cleanSearch} selected={location === "/admin/"}>
+            <ListItemText primary="Administrador" />
+          </ListItem>
+          )}
         </List>
       </Drawer>
     </>
   );
 }
-
-export default Sidebar;
