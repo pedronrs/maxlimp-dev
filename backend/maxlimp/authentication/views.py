@@ -363,6 +363,7 @@ class CheckAuthAPI(APIView):
             return Response({"error": "O usuário não existe.", "type": "notAuthenticated"}, status=status.HTTP_200_OK)
 
         user_obj = {
+            "id":  user.id,
             "name":user.name,
             "email": user.email,
             "avatar": user.avatar,

@@ -21,11 +21,12 @@ function AddToCart({ product }) {
       });
       return;
     }
-    addToCart(product);
+
     toast.success("Produto adicionado!", {
       position: "top-right",
       autoClose: 1000,
     });
+    addToCart(product);
   };
 
   const handleEdit = (vector) => {

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import { useProducts } from "../contexts/ProductsProvider";
 import SubHeaderPage from "./SubHeaderPage";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Sidebar } from './SideBar';
-import { Box } from '@mui/material';
+import { Sidebar } from "./SideBar";
+import { Box } from "@mui/material";
 
 function SubHeaderHome({ user }) {
   const { pathname: location, hash } = useLocation();
@@ -14,10 +14,13 @@ function SubHeaderHome({ user }) {
 
   return (
     <div>
-      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+      <Box sx={{ display: { xs: "block", md: "none" } }}>
         <Sidebar user={user} />
       </Box>
-      <Box sx={{ display: { xs: 'none', md: 'flex' }}} className="flex justify-start items-center gap-10 py-4 pb-8">
+      <Box
+        sx={{ display: { xs: "none", md: "flex" } }}
+        className="flex justify-start items-center gap-10 py-4 pb-8"
+      >
         <SubHeaderPage
           onClick={(e) => {
             e.preventDefault();
@@ -38,9 +41,6 @@ function SubHeaderHome({ user }) {
             <SubHeaderPage active={location === "pedidos/"} to="/pedidos">
               Pedidos
             </SubHeaderPage>
-            <SubHeaderPage active={location === "suporte/"} to="/suporte">
-              Suporte
-            </SubHeaderPage>
           </>
         )}
         <SubHeaderPage
@@ -52,7 +52,7 @@ function SubHeaderHome({ user }) {
         >
           Contatos
         </SubHeaderPage>
-        {user.type == 'admin' && (
+        {user?.type == "admin" && (
           <SubHeaderPage active={location === "admin/"} to="/admin">
             Administrador
           </SubHeaderPage>

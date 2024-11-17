@@ -7,7 +7,7 @@ function ProductBox({ product }) {
   const navigate = useNavigate();
 
   const handleSaibaMais = () => {
-    navigate(`/product/${product.id}`);
+    navigate(`/produto/${product.id}`);
   };
   return (
     <div className="rounded-md p-4 border-2 border-indigo-600">

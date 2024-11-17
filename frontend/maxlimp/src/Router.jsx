@@ -12,6 +12,7 @@ import ProductDetails from "./products/ProductDetails";
 import Address from "./pages/Address";
 import { AdddresssProvider } from "./contexts/AddressProvider";
 import { Admin } from "./pages/Admin";
+import Orders from "./pages/Orders";
 
 const router = createBrowserRouter([
   {
@@ -51,8 +52,12 @@ const router = createBrowserRouter([
     element: <Address />,
   },
   {
-    path: "product/:id",
+    path: "produto/:id",
     element: <ProductDetails />,
+  },
+  {
+    path: "pedidos/",
+    element: <Orders />,
   },
   {
     path: "/admin",

@@ -14,19 +14,24 @@ function ProductsContainer() {
   const { products, search, setProducts, setFilter } = useProducts();
   const { categories, price, handleCategoryChange } = useFilter();
   const [page, setPage] = useState(1);
-  const maxItens = 2; // Quantidade para teste, mudar depois da adição de mais produtos
+  const maxItens = 4; // Quantidade para teste, mudar depois da adição de mais produtos
   const [totalPages, setTotalPages] = useState(1);
 
   const { data, isLoading } = useSWR("products/all-products/", getFetcher);
 
   useEffect(() => {
-    if (data) {
-      setProducts(data);
-      setTotalPages(Math.ceil(data.length / maxItens));
+    if (products?.length) {
+      setProducts(products);
+      setTotalPages(Math.ceil(products.length / maxItens));
+      return;
     }
-  }, [data]);
+    if (data && isLoading === false) {
+      setProducts(data);
+      setTotalPages(Math.ceil(data?.length / maxItens));
+    }
+  }, [data, products?.length]);
 
-  if (isLoading) {
+  if (isLoading || !products?.length) {
     return (
       <>
         <ProductsTitle>{search ? `"${search}"` : "em destaque"}</ProductsTitle>
@@ -42,7 +47,10 @@ function ProductsContainer() {
   };
 
   const startIndex = (page - 1) * maxItens;
-  const displayableProducts = data.slice(startIndex, startIndex + maxItens);
+  const displayableProducts = products?.slice(
+    startIndex,
+    startIndex + maxItens
+  );
 
   return (
     <>
@@ -72,7 +80,7 @@ function ProductsContainer() {
           ))}
         </Grid>
       </div>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
           count={totalPages}
           page={page}

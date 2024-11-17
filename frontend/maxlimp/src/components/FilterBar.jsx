@@ -41,11 +41,11 @@ function FilterBar() {
   const products = useMemo(() => data, [data]);
 
   useEffect(() => {
-    if (products !== undefined) {
+    if (products?.length) {
       setProducts(products);
       setFilter(false);
     }
-  }, [products]);
+  }, [products?.length]);
 
   return (
     <div className="px-8 py-4 border-t-2 border-r-2  border-indigo-500 flex flex-col justify-start items-start text-stone-800 gap-8 ">

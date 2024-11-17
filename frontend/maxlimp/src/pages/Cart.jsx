@@ -20,9 +20,7 @@ function Cart() {
   const [selectedItems, setSelectedItems] = useState(cart.map((p) => p?.name));
 
   const handleQuantityChange = (productName, newQuantity) => {
-    if (newQuantity > 0) {
-      updateQuantity(productName, newQuantity);
-    }
+    updateQuantity(productName, newQuantity);
   };
 
   const handleCheckboxChange = (productName) => {
@@ -97,7 +95,7 @@ function Cart() {
                         type="number"
                         className="border rounded w-10 p-1"
                         value={product.quantity}
-                        min="1"
+                        min="0"
                         onChange={(e) =>
                           handleQuantityChange(
                             product.name,

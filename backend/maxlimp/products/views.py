@@ -6,6 +6,9 @@ from .models import Rating, Product
 from authentication.models import User
 import json
 
+from authentication.lib import decode_jwt
+from authentication.orm import get_user
+
 
 from .orm import *
 # Create your views here.
@@ -68,43 +71,123 @@ class FilterLengthResults(APIView):
 
 class EspecificProduct(APIView):
     def get(self, request):
+        auth = request.COOKIES.get("auth")
+        try:
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            user = None
+
+
         product_id = request.query_params.get("product")
 
-        product = get_especific_product(product_id)
+        product = get_especific_product(user, product_id)
+
 
         return Response(product, status=HTTP_200_OK)
     
 
 class RateProduct(APIView):
     def post(self, request):
+        auth = request.COOKIES.get("auth")
         try:
-            rating_data = request.data.get("rating")
-            user_data = request.data.get("user")
-            product_id = request.data.get("product_id")
-            stars = rating_data.get("stars")
-            title = rating_data.get("title")
-            comment = rating_data.get("comment")
-
-            product = Product.objects.get(id=product_id)
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            return Response({"error": "Usuário não autenticado."}, status=HTTP_401_UNAUTHORIZED)
     
-            user, created = User.objects.get_or_create(
-                name=user_data.get("name"),
-                defaults={'first_name': user_data.get("name")}
-            )
-            print("User found or created:", user)
+        
+        product_id = request.data.get("id")
+        stars = request.data.get("stars")
+        comment = request.data.get("comment")
 
-            rating = Rating.objects.create(
-                product_id=product,
-                user_id=user,
-                stars=stars,
-                title=title,
-                comment=comment,
-                created_at=timezone.now(),
-                updated_at=timezone.now()
-            )
-            return Response({"message": "Comentário adicionado com sucesso!"}, status=HTTP_201_CREATED)
-        except Product.DoesNotExist:
-            return Response({"error": "Produto não encontrado."}, status=HTTP_404_NOT_FOUND)
-        except Exception as e:
-            print("Error:", str(e))
-            return Response({"error": str(e)}, status=HTTP_400_BAD_REQUEST)
+        product = get_product_instance(product_id)
+
+        rate_product(user, product, stars, comment)
+
+
+        return Response({"message": "Produto avaliado com sucesso!"}, status=HTTP_201_CREATED)
+    
+
+
+class DeleteRating(APIView):
+    def post(self, request):
+        auth = request.COOKIES.get("auth")
+        try:
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            return Response({"error": "Usuário não autenticado."}, status=HTTP_401_UNAUTHORIZED)
+        
+        
+
+        product_id = request.data.get("id")
+
+        product = get_product_instance(product_id)
+
+        delete_rating(user, product)
+
+
+        return Response({"message": "Avaliação removida com sucesso!"}, status=HTTP_200_OK)
+            
+
+
+
+class AddProductCart(APIView):
+    def post(self, request):
+        auth = request.COOKIES.get("auth")
+        try:
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            return Response({"error": "Usuário não autenticado."}, status=HTTP_401_UNAUTHORIZED)
+        
+        product = request.data.get("product")
+
+        cart_management(user, 
+                        get_product_instance(product.get("id")), 
+                        product.get("quantity"))
+        
+        return Response({"message": "Produto adicionado ao carrinho com sucesso!"}, status=HTTP_201_CREATED)
+
+
+
+class DeleteProductCart(APIView):
+    def post(self, request):
+        auth = request.COOKIES.get("auth")
+        try:
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            return Response({"error": "Usuário não autenticado."}, status=HTTP_401_UNAUTHORIZED)
+        
+        product = request.data.get("product")
+
+        delete_cart(user, 
+                    get_product_instance(product.get("id")))
+        
+        return Response({"message": "Produto removido do carrinho com sucesso!"}, status=HTTP_200_OK)
+
+
+class GetCart(APIView):
+    def get(self, request):
+        auth = request.COOKIES.get("auth")
+        try:
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            return Response([])
+        
+        cart = get_cart(user)
+
+        return Response(cart, status=HTTP_200_OK)
+    
+
+
+class GetOrders(APIView):
+    def get(self, request):
+        auth = request.COOKIES.get("auth")
+        try:
+            user = get_user(decode_jwt(auth)["email"])
+        except:
+            return Response({"error": "Usuário não autenticado."}, status=HTTP_401_UNAUTHORIZED)
+        
+        orders = get_orders(user)
+
+        print(orders)
+
+        return Response(orders, status=HTTP_200_OK)

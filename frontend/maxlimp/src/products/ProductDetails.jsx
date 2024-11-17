@@ -1,4 +1,11 @@
-import { Box, Grid, Typography, Paper, Rating } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  Paper,
+  Rating,
+  CircularProgress,
+} from "@mui/material";
 import AddToCart from "../components/AddToCart";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
@@ -7,21 +14,34 @@ import HeaderHome from "../components/HeaderHome";
 import Footer from "../components/Footer";
 import ProductComments from "./ProductComment";
 import { useState } from "react";
+import Loading from "../components/Loading";
 
 function ProductDetails() {
   const { id } = useParams();
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(0);
   const [averageRating, setAverageRating] = useState(0);
 
   const handleAverageRatingUpdate = (newAverage) => {
     setAverageRating(newAverage);
   };
 
-  const { data: product } = useSWR(
+  const { data: product, isLoading } = useSWR(
     `products/especific-product?product=${id}`,
     getFetcher
   );
-  console.log(product);
+
+  if (isLoading) {
+    return (
+      <>
+        {" "}
+        <HeaderHome showSearch={false}></HeaderHome>
+        <Grid container justifyContent="center" alignItems="center">
+          <Loading classNames="w-[30%]" />
+        </Grid>
+      </>
+    );
+  }
+
   if (!product?.description) {
     return (
       <>
@@ -68,14 +88,20 @@ function ProductDetails() {
               <Typography variant="body1" gutterBottom>
                 {product.description}
               </Typography>
-              <Rating precision={0.5} value={averageRating} readOnly />
+              <Rating precision={0.5} value={Number(averageRating)} readOnly />
               <Typography variant="h6" color="text.secondary">
                 R$ {product.price}
               </Typography>
               <AddToCart product={product} />
             </Grid>
           </Grid>
-          <ProductComments product={product} rating={rating} setRating={setRating} onAverageRatingUpdate={handleAverageRatingUpdate} />
+
+          <ProductComments
+            product={product}
+            rating={rating}
+            setRating={setRating}
+            onAverageRatingUpdate={handleAverageRatingUpdate}
+          />
         </Paper>
       </Box>
     </>
