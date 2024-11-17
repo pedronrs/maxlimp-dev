@@ -44,7 +44,7 @@ function Orders() {
   return (
     <>
       <HeaderHome showSearch={false} />
-      <div className="flex flex-col gap-6 px-12 mt-20 mb-20">
+      <div className="flex flex-col gap-6 px-12 mt-20 mb-20 overflow-auto">
         <h1 className="text-2xl tracking-tight mb-8 text-stone-800 capitalize">
           Pedidos
         </h1>

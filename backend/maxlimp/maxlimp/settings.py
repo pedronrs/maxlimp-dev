@@ -35,6 +35,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 
 INSTALLED_APPS = [
+    'admin',
     'products',
     'authentication',
     'rest_framework',

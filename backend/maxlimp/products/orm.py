@@ -193,7 +193,8 @@ def get_orders(user):
                      "updatedAt": order.updated_at,
                      "address": order.address_id.address,
                      "district": order.address_id.district,
-                     "complement": order.address_id.complement
+                     "complement": order.address_id.complement,
+                     "id": order.id
                        }
         
         response.append(order_obj)
