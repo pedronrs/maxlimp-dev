@@ -11,4 +11,5 @@ urlpatterns = [
     path("save-image/", SaveImage.as_view(), name="save-image"),
     path("delete-image/", DeleteImage.as_view(), name="delete-image"),
     path("get-addresses/", GetAddresses.as_view(), name="get-addresses"),
+    path("get-orders/", GetOrders.as_view(), name="get-orders"),
 ]
