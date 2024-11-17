@@ -18,8 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('api/auth/', include('authentication.urls')),
     path('api/products/', include('products.urls')),
-    path("api/admin/", include('admin.urls'))
+    path("api/admin/", include('adminMaxlimp.urls'))
 ]
