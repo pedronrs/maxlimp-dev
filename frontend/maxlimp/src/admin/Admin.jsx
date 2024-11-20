@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthProvider";
 import HeaderHome from "../components/HeaderHome";
 import Footer from "../components/Footer";
+import Dashboard from "./Dashboard";
 
 
 export function Admin(){
@@ -12,8 +13,8 @@ export function Admin(){
         <div>
             <HeaderHome showSearch={false} />
             {user.type == 'admin' ? (
-                <div className="h-screen">
-                    Bem vindo Admin
+                <div className="min-h-screen bg-gray-100">
+                    <Dashboard/>
                 </div>
             ) : (
                 <div className="h-screen">

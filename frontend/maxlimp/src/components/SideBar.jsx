@@ -86,7 +86,7 @@ export function Sidebar({ user }) {
               onClick={cleanSearch}
               selected={location === "/admin/"}
             >
-              <ListItemText primary="Administrador" />
+              <ListItemText primary="Dashboard" />
             </ListItem>
           )}
         </List>

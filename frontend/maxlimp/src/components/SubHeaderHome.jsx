@@ -54,7 +54,7 @@ function SubHeaderHome({ user }) {
         </SubHeaderPage>
         {user?.type == "admin" && (
           <SubHeaderPage active={location === "admin/"} to="/admin">
-            Administrador
+            Dashboard
           </SubHeaderPage>
         )}
       </Box>

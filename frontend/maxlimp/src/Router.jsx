@@ -11,7 +11,7 @@ import Cart from "./pages/Cart";
 import ProductDetails from "./products/ProductDetails";
 import Address from "./pages/Address";
 import { AdddresssProvider } from "./contexts/AddressProvider";
-import { Admin } from "./pages/Admin";
+import { Admin } from "./admin/Admin";
 import Orders from "./pages/Orders";
 
 const router = createBrowserRouter([
