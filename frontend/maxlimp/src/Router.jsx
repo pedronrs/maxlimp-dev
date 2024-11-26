@@ -7,6 +7,7 @@ import ConfirmEmailCode from "./pages/ConfirmEmailCode";
 import AboutUs from "./pages/AboutUs";
 import Config from "./pages/Config";
 import Cart from "./pages/Cart";
+import NotFound from "./components/NotFound";
 
 import ProductDetails from "./products/ProductDetails";
 import Address from "./pages/Address";
@@ -15,6 +16,10 @@ import { Admin } from "./admin/Admin";
 import Orders from "./pages/Orders";
 
 const router = createBrowserRouter([
+  {
+    path: "*",
+    element: <NotFound />,
+  },
   {
     path: "/",
     element: <Home />,

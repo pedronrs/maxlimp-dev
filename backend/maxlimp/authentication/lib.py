@@ -16,7 +16,8 @@ from datetime import datetime, timedelta
 
 from random import randint 
 
-import jwt
+import jwt as python_jwt
+
 import re
 
 from .orm import *
@@ -140,7 +141,17 @@ def create_jwt_response(message, status, payload, key="auth"):
 
 
 def decode_jwt(token):
-    return jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+    try:
+        decoded = python_jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+        return decoded
+    except Exception as e:
+        print(e)
+        return {}
+
 
 
 def create_jwt_temp(name, email, password, phone, code):
@@ -157,7 +168,7 @@ def create_jwt_temp(name, email, password, phone, code):
     }
 
     #Gerando token
-    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
+    token = python_jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 def invalid_cookie():
@@ -168,7 +179,7 @@ def invalid_cookie():
         'iat': datetime.now(),
     }
 
-    payload = jwt.encode(j, settings.SECRET_KEY, algorithm=ALGORITHM)
+    payload = python_jwt.encode(j, settings.SECRET_KEY, algorithm=ALGORITHM)
 
     
     return payload
@@ -183,7 +194,7 @@ def create_jwt_to_auth(user):
     }
     
     #Gerando token
-    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
+    token = python_jwt.encode(payload, settings.SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 
@@ -212,7 +223,7 @@ def send_random_code(email):
 
 
 def resset_password_email(email):
-    token = jwt.encode({'email': email, 'exp': datetime.now() + timedelta(minutes=30)}, settings.SECRET_KEY, algorithm=ALGORITHM)
+    token = python_jwt.encode({'email': email, 'exp': datetime.now() + timedelta(minutes=30)}, settings.SECRET_KEY, algorithm=ALGORITHM)
 
     UserToken.objects.create(user=email, token=token)
 
